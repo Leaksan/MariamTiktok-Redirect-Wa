@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mariam 241 — Contact</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;800&family=DM+Sans:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0d0d;
+      --surface: #161616;
+      --border: rgba(255,255,255,0.07);
+      --green: #25D366;
+      --green-dim: rgba(37,211,102,0.12);
+      --green-glow: rgba(37,211,102,0.35);
+      --text: #f0f0f0;
+      --muted: #888;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* Ambient glow background */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(ellipse, rgba(37,211,102,0.08) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .card {
+      position: relative;
+      z-index: 1;
+      width: min(420px, 92vw);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 48px 36px 40px;
+      text-align: center;
+      animation: fadeUp 0.6s cubic-bezier(0.22,1,0.36,1) both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Avatar */
+    .avatar-wrap {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 24px;
+    }
+
+    .avatar {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1a3a25, #0d0d0d);
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 42px;
+      overflow: hidden;
+    }
+
+    .avatar-ring {
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      background: linear-gradient(135deg, var(--green), transparent 60%) border-box;
+      -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: destination-out;
+      mask-composite: exclude;
+      animation: spin 6s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .badge {
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      width: 22px;
+      height: 22px;
+      background: var(--green);
+      border-radius: 50%;
+      border: 2px solid var(--surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .badge svg { width: 11px; height: 11px; fill: #fff; }
+
+    /* Text */
+    .name {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.6rem;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+    }
+
+    .tagline {
+      font-size: 0.82rem;
+      color: var(--muted);
+      font-weight: 300;
+      letter-spacing: 0.04em;
+      margin-bottom: 32px;
+      line-height: 1.5;
+    }
+
+    /* CTA button */
+    .btn-wa {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      width: 100%;
+      padding: 18px 24px;
+      background: var(--green);
+      color: #fff;
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
+      letter-spacing: 0.01em;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+      box-shadow: 0 4px 24px var(--green-glow);
+      animation: fadeUp 0.6s 0.15s cubic-bezier(0.22,1,0.36,1) both;
+    }
+
+    .btn-wa:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px var(--green-glow);
+    }
+
+    .btn-wa:active {
+      transform: translateY(0);
+    }
+
+    .btn-wa svg { flex-shrink: 0; }
+
+    /* Divider + note */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 20px 0 16px;
+      animation: fadeUp 0.6s 0.25s cubic-bezier(0.22,1,0.36,1) both;
+    }
+
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .divider span {
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .note {
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: 300;
+      line-height: 1.6;
+      animation: fadeUp 0.6s 0.3s cubic-bezier(0.22,1,0.36,1) both;
+    }
+
+    .note strong {
+      color: var(--green);
+      font-weight: 400;
+    }
+
+    /* Redirect status */
+    .status {
+      margin-top: 28px;
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.2);
+      letter-spacing: 0.06em;
+      animation: fadeUp 0.6s 0.4s cubic-bezier(0.22,1,0.36,1) both;
+    }
+
+    #countdown { color: rgba(255,255,255,0.35); }
+  </style>
+</head>
+<body>
+
+<div class="card">
+
+  <div class="avatar-wrap">
+    <div class="avatar">🎓</div>
+    <div class="avatar-ring"></div>
+    <div class="badge">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+        <path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.533 5.857L0 24l6.335-1.533A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 0 1-5.004-1.368l-.36-.213-3.754.984.999-3.659-.234-.376A9.818 9.818 0 0 1 2.182 12C2.182 6.57 6.57 2.182 12 2.182S21.818 6.57 21.818 12 17.43 21.818 12 21.818z"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="name">Mariam 241</div>
+  <div class="tagline">Première assistante IA<br>d'apprentissage gabonaise</div>
+
+  <a class="btn-wa" href="https://wa.me/24174756768?text=Bonjour%20Mariam%20!" id="wa-btn" target="_blank" rel="noopener">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+      <path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.533 5.857L0 24l6.335-1.533A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 0 1-5.004-1.368l-.36-.213-3.754.984.999-3.659-.234-.376A9.818 9.818 0 0 1 2.182 12C2.182 6.57 6.57 2.182 12 2.182S21.818 6.57 21.818 12 17.43 21.818 12 21.818z"/>
+    </svg>
+    Contacter sur WhatsApp
+  </a>
+
+  <div class="divider"><span>redirection auto</span></div>
+
+  <div class="note">
+    Tu seras redirigé vers WhatsApp dans <strong><span id="countdown">3</span>s</strong>.<br>
+    Sinon, clique sur le bouton ci-dessus.
+  </div>
+
+  <div class="status">mariam241.com · @mariamai241</div>
+
+</div>
+
+<script>
+  const WA_URL = "https://wa.me/24174756768?text=Bonjour%20Mariam%20!";
+
+  // Countdown + auto-redirect
+  let n = 3;
+  const el = document.getElementById('countdown');
+  const timer = setInterval(() => {
+    n--;
+    el.textContent = n;
+    if (n <= 0) {
+      clearInterval(timer);
+      window.location.href = WA_URL;
+    }
+  }, 1000);
+</script>
+
+</body>
+</html>
