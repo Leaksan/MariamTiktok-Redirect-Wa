@@ -13,7 +13,7 @@
       --green: #25D366;
       --green-glow: rgba(37,211,102,0.35);
       --text: #f5f5f5;
-      --muted: #666;
+      --muted: #555;
       --surface: #141414;
       --border: rgba(255,255,255,0.06);
     }
@@ -26,118 +26,108 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 20px 16px;
+      padding: 0 16px 32px;
+      overflow-x: hidden;
     }
 
-    /* ─── TIKTOK STATE ─── */
+    /* ─── TikTok state ─── */
     #step-tiktok {
       display: none;
       flex-direction: column;
       align-items: center;
       width: min(400px, 100%);
-      animation: fadeUp 0.5s cubic-bezier(0.22,1,0.36,1) both;
     }
     #step-tiktok.active { display: flex; }
 
-    /* ── Finger + tap zone overlay, fixed to actual ··· position ── */
-    /* The ··· in TikTok browser is top-right, roughly 60px from right, 22px from top */
-    .tap-target {
-      position: fixed;
-      top: 6px;
-      right: 8px;
-      width: 56px;
-      height: 44px;
-      z-index: 100;
-      pointer-events: none;
+    /* ── Big arrow area at the top, pointing to browser chrome ── */
+    .arrow-zone {
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+      padding-right: 12px;
+      padding-top: 10px;
+      margin-bottom: 0;
+      height: 110px;
+      position: relative;
     }
 
-    /* pulsing highlight box around ··· */
-    .tap-highlight {
-      position: absolute;
-      inset: 0;
-      border: 2.5px solid var(--green);
-      border-radius: 10px;
-      animation: highlightPulse 1s ease-in-out infinite;
+    /* SVG arrow: starts inside page, curves up-right toward the ··· */
+    .arrow-zone svg {
+      width: 180px;
+      height: 110px;
+      overflow: visible;
     }
 
-    @keyframes highlightPulse {
-      0%, 100% { opacity: 1;   box-shadow: 0 0 0   0   rgba(37,211,102,0.5); }
-      50%       { opacity: 0.6; box-shadow: 0 0 0 8px rgba(37,211,102,0); }
-    }
-
-    /* bouncing finger emoji */
-    .tap-finger {
-      position: fixed;
-      top: 42px;
-      right: 4px;
-      font-size: 1.8rem;
-      z-index: 101;
-      pointer-events: none;
-      animation: fingerBounce 1s ease-in-out infinite;
-      transform-origin: bottom center;
-    }
-
-    @keyframes fingerBounce {
-      0%, 100% { transform: translateY(0)   rotate(-20deg); }
-      50%       { transform: translateY(-6px) rotate(-20deg); }
-    }
-
-    /* curved dashed line from card to corner */
-    .guide-line {
-      position: fixed;
-      top: 0;
-      right: 0;
-      width: 120px;
-      height: 180px;
-      pointer-events: none;
-      z-index: 99;
-    }
-
-    .guide-line path {
+    .arrow-path {
       stroke: var(--green);
-      stroke-width: 2.5;
-      stroke-dasharray: 7 5;
-      fill: none;
+      stroke-width: 4;
       stroke-linecap: round;
-      animation: dashMove 1.2s linear infinite;
+      stroke-linejoin: round;
+      fill: none;
+      animation: dashDraw 1s linear infinite;
+      stroke-dasharray: 8 5;
     }
 
-    @keyframes dashMove {
-      to { stroke-dashoffset: -36; }
+    @keyframes dashDraw {
+      to { stroke-dashoffset: -52; }
     }
 
-    /* ── Instruction card ── */
+    .arrowhead {
+      fill: var(--green);
+      animation: arrowBounce 0.8s ease-in-out infinite;
+      transform-origin: 160px 10px;
+    }
+
+    @keyframes arrowBounce {
+      0%, 100% { transform: translate(0, 0); }
+      50%       { transform: translate(4px, -4px); }
+    }
+
+    /* Label next to arrow */
+    .arrow-label {
+      position: absolute;
+      top: 18px;
+      right: 56px;
+      background: var(--green);
+      color: #000;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 0.78rem;
+      padding: 5px 10px;
+      border-radius: 20px;
+      white-space: nowrap;
+      letter-spacing: 0.02em;
+      animation: labelPop 0.8s ease-in-out infinite;
+    }
+
+    @keyframes labelPop {
+      0%, 100% { transform: scale(1);    }
+      50%       { transform: scale(1.06); }
+    }
+
+    /* ── Card ── */
     .instruction-card {
       background: var(--surface);
       border: 1px solid rgba(37,211,102,0.15);
       border-radius: 22px;
-      padding: 32px 24px 28px;
+      padding: 28px 22px 24px;
       text-align: center;
       width: 100%;
-      /* top margin so it doesn't overlap fixed elements */
-      margin-top: 16px;
-    }
-
-    .step-icon {
-      font-size: 2.6rem;
-      margin-bottom: 14px;
-      display: block;
     }
 
     .instruction-title {
       font-family: 'Syne', sans-serif;
-      font-size: 1.45rem;
+      font-size: 1.5rem;
       font-weight: 800;
       margin-bottom: 8px;
-      line-height: 1.2;
+      line-height: 1.15;
     }
 
     .instruction-sub {
       font-size: 0.82rem;
       color: var(--muted);
       line-height: 1.6;
-      margin-bottom: 22px;
+      margin-bottom: 20px;
     }
 
     .steps-visual {
@@ -155,13 +145,11 @@
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 13px 14px;
-      transition: border-color 0.3s;
     }
 
-    /* highlight step 1 since that's the action needed */
     .vstep:first-child {
-      border-color: rgba(37,211,102,0.3);
-      background: rgba(37,211,102,0.05);
+      border-color: rgba(37,211,102,0.35);
+      background: rgba(37,211,102,0.06);
     }
 
     .vstep-num {
@@ -180,7 +168,7 @@
     }
 
     .vstep:not(:first-child) .vstep-num {
-      background: #2a2a2a;
+      background: #252525;
       color: var(--muted);
     }
 
@@ -193,72 +181,47 @@
 
     .vstep-text strong { color: var(--text); font-weight: 400; }
 
-    .vstep-emoji {
-      font-size: 1.3rem;
-      flex-shrink: 0;
-    }
+    .vstep-emoji { font-size: 1.25rem; flex-shrink: 0; }
 
     .footer-note {
-      margin-top: 16px;
-      font-size: 0.7rem;
-      color: #2a2a2a;
+      margin-top: 14px;
+      font-size: 0.68rem;
+      color: #252525;
       text-align: center;
     }
 
-    /* ─── NORMAL STATE ─── */
+    /* ─── Normal state ─── */
     #step-normal {
       display: none;
       flex-direction: column;
       align-items: center;
       width: min(400px, 100%);
+      margin-top: 40vh;
       animation: fadeUp 0.5s cubic-bezier(0.22,1,0.36,1) both;
     }
     #step-normal.active { display: flex; }
 
-    .brand {
-      text-align: center;
-      margin-bottom: 32px;
-    }
+    .brand { text-align: center; margin-bottom: 32px; }
 
     .brand-avatar {
-      width: 80px;
-      height: 80px;
+      width: 80px; height: 80px;
       background: #1a2a1e;
       border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       font-size: 36px;
       margin: 0 auto 16px;
       border: 1px solid rgba(37,211,102,0.2);
     }
 
-    .brand-name {
-      font-family: 'Syne', sans-serif;
-      font-size: 1.5rem;
-      font-weight: 800;
-    }
-
-    .brand-sub {
-      font-size: 0.78rem;
-      color: var(--muted);
-      margin-top: 4px;
-    }
+    .brand-name { font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 800; }
+    .brand-sub  { font-size: 0.78rem; color: var(--muted); margin-top: 4px; }
 
     .btn-wa {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      width: 100%;
-      padding: 20px;
-      background: var(--green);
-      color: #000;
-      font-family: 'Syne', sans-serif;
-      font-weight: 700;
-      font-size: 1rem;
-      border-radius: 16px;
-      text-decoration: none;
+      display: flex; align-items: center; justify-content: center; gap: 12px;
+      width: 100%; padding: 20px;
+      background: var(--green); color: #000;
+      font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem;
+      border-radius: 16px; text-decoration: none;
       animation: btnPulse 2s ease-in-out infinite;
     }
 
@@ -275,32 +238,28 @@
 </head>
 <body>
 
-<!-- ── STATE 1: TikTok browser ── -->
+<!-- ── TikTok state ── -->
 <div id="step-tiktok">
 
-  <!-- Pulsing box exactly on ··· button -->
-  <div class="tap-target">
-    <div class="tap-highlight"></div>
+  <!-- Arrow zone pointing UP toward browser bar -->
+  <div class="arrow-zone">
+    <div class="arrow-label">Appuie ici !</div>
+    <svg viewBox="0 0 180 110" xmlns="http://www.w3.org/2000/svg" overflow="visible">
+      <!-- curve from bottom-left of svg up to top-right corner (where ··· lives) -->
+      <path class="arrow-path" d="M 30 105 C 40 60, 100 40, 162 8"/>
+      <!-- arrowhead at top-right -->
+      <polygon class="arrowhead" points="162,2 150,14 170,16"/>
+    </svg>
   </div>
 
-  <!-- Bouncing finger pointing at ··· -->
-  <div class="tap-finger">👆</div>
-
-  <!-- Dashed line from card area toward ··· -->
-  <svg class="guide-line" viewBox="0 0 120 180" xmlns="http://www.w3.org/2000/svg">
-    <!-- curve from bottom-left to top-right corner where ··· lives -->
-    <path d="M 20 175 C 20 100, 80 80, 100 10"/>
-  </svg>
-
   <div class="instruction-card">
-    <span class="step-icon">👆</span>
     <div class="instruction-title">Appuie sur ···<br>en haut à droite</div>
-    <div class="instruction-sub">Le navigateur TikTok bloque WhatsApp.<br>Une seule action et tu y es :</div>
+    <div class="instruction-sub">Le navigateur TikTok bloque WhatsApp.<br>Deux secondes et tu y es :</div>
 
     <div class="steps-visual">
       <div class="vstep">
         <div class="vstep-num">1</div>
-        <div class="vstep-text">Appuie sur <strong>"···"</strong> en haut à droite</div>
+        <div class="vstep-text">Appuie sur <strong>···</strong> en haut à droite</div>
         <div class="vstep-emoji">👆</div>
       </div>
       <div class="vstep">
@@ -308,42 +267,33 @@
         <div class="vstep-text">Choisis <strong>"Ouvrir dans le navigateur"</strong></div>
         <div class="vstep-emoji">🌐</div>
       </div>
-      <div class="vstep">
-        <div class="vstep-num">3</div>
-        <div class="vstep-text">Appuie sur <strong>"Ouvrir l'application"</strong> sur la page qui s'affiche</div>
-        <div class="vstep-emoji">✅</div>
-      </div>
     </div>
   </div>
 
   <div class="footer-note">@mariamai241 · mariam241.com</div>
 </div>
 
-<!-- ── STATE 2: Normal browser → redirect ── -->
+<!-- ── Normal state ── -->
 <div id="step-normal">
   <div class="brand">
     <div class="brand-avatar">🎓</div>
     <div class="brand-name">Mariam 241</div>
     <div class="brand-sub">Première assistante IA gabonaise</div>
   </div>
-
-  <a class="btn-wa" href="https://wa.me/24174756768?text=Bonjour%20Mariam%20!" id="wa-btn">
+  <a class="btn-wa" href="https://wa.me/24174756768?text=Bonjour%20Mariam%20!">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="black" xmlns="http://www.w3.org/2000/svg">
-      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.76-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
       <path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.533 5.857L0 24l6.335-1.533A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 0 1-5.004-1.368l-.36-.213-3.754.984.999-3.659-.234-.376A9.818 9.818 0 0 1 2.182 12C2.182 6.57 6.57 2.182 12 2.182S21.818 6.57 21.818 12 17.43 21.818 12 21.818z"/>
     </svg>
     Contacter sur WhatsApp
   </a>
-
-  <div class="footer-note" style="margin-top:20px;">@mariamai241 · mariam241.com</div>
 </div>
 
 <script>
-  const WA_URL = "https://wa.me/24174756768?text=Bonjour%20Mariam%20!";
+  const WA_URL = "https://wa.me/24174756768?text=Bonjour%20Mariam%20de%20Tiktok%20!";
 
   function isTikTokBrowser() {
-    const ua = navigator.userAgent || '';
-    return /musical_ly|TikTok|BytedanceWebview|ByteLocale/i.test(ua);
+    return /musical_ly|TikTok|BytedanceWebview|ByteLocale/i.test(navigator.userAgent || '');
   }
 
   if (isTikTokBrowser()) {
